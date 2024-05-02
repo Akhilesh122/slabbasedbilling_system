@@ -1,7 +1,11 @@
 package com.geojit.slabbasedbilling.system.controller;
+
+import com.geojit.slabbasedbilling.system.dto.MeterReadingResponseDto;
 import com.geojit.slabbasedbilling.system.model.MeterReading;
+import com.geojit.slabbasedbilling.system.repository.CustomerRepository;
 import com.geojit.slabbasedbilling.system.service.MeterReadingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,12 +15,19 @@ import java.util.List;
 public class MeterReadingController {
     @Autowired
     private MeterReadingService meterReadingService;
+    @Autowired
+    private CustomerRepository customerRepository;
 
-    @PostMapping("/saveMeterReading")
+   /* @PostMapping("/saveMeterReading")
     public ResponseEntity<MeterReading> saveMeterReading(@RequestParam Long customerId, @RequestBody MeterReading meterReading) {
         MeterReading savedMeterReading = meterReadingService.saveMeterReadingDetails(customerId, meterReading);
         return ResponseEntity.ok(savedMeterReading);
-    }
+    }*/
+   @PostMapping("/saveMeterReading")
+   public ResponseEntity<MeterReading> saveMeterReadings(@RequestBody MeterReadingResponseDto meterReadingResponseDto) {
+       MeterReading meterReading = meterReadingService.saveMeterReadingDetails(meterReadingResponseDto);
+       return new ResponseEntity<>(meterReading, HttpStatus.CREATED);
+   }
     @GetMapping("/getAllMeterReading")
     public List<MeterReading> getAllMeterReadingDetails(){
          List<MeterReading> allMeterReading = meterReadingService.getAllMeterReading();

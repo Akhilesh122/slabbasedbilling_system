@@ -21,7 +21,7 @@ public class MeterReading {
     private long id;
     @Min(value = 0, message = "Current reading cannot be negative")
     private int currentReading;
-    @Min(value = 0, message = "Previous reading cannot be negative")
+    //@Min(value = 0, message = "Previous reading cannot be negative")
     private int previousReading;
     @NotNull(message = "Month of reading is mandatory")
     private Month month;

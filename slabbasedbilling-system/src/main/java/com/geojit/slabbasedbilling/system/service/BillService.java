@@ -1,5 +1,6 @@
 package com.geojit.slabbasedbilling.system.service;
 
+import com.geojit.slabbasedbilling.system.dto.BillDto;
 import com.geojit.slabbasedbilling.system.exception.CustomException;
 import com.geojit.slabbasedbilling.system.exception.CustomerNotFoundException;
 import com.geojit.slabbasedbilling.system.model.Bill;
@@ -13,8 +14,6 @@ import com.geojit.slabbasedbilling.system.repository.PriceSlabRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class BillService {
 
@@ -26,53 +25,51 @@ public class BillService {
     private CustomerRepository customerRepository;
     @Autowired
     private MeterReadingRepository meterReadingRepository;
-    public Bill generateBill(Long customerId, Long meterReadingId, Long priceSlabsId,Bill bill) {
+   public Bill generateBill(BillDto billDto) {
 
-        // Check if a bill already exists for the given combination of meterReadingId, and priceSlabsId
-        boolean billExists = billRepository.existsByMeterReading_IdAndPriceSlabs_Id(
-                 meterReadingId, priceSlabsId);
+       // Extract data from BillDto
+       Long customerId = billDto.getCustomerId();
+       Long meterReadingId = billDto.getMeterReadingId();
+       Long priceSlabsId = billDto.getPriceSlabsId();
 
-        if (billExists) {
-            throw new CustomException("A bill already exists for this combination of meter reading, and price slabs.");
-        }
+       // Check if a bill already exists for the given combination of meterReadingId and priceSlabsId
+       boolean billExists = billRepository.existsByMeterReading_IdAndPriceSlabs_Id(meterReadingId, priceSlabsId);
 
-        Optional<Customer> customerOptional = customerRepository.findById(customerId);
-               if(customerOptional.isEmpty()){
-                   throw new CustomerNotFoundException("Customer not found with id: " + customerId);
-               }
-               Customer customer = customerOptional.get();
+       if (billExists) {
+           throw new CustomException("A bill already exists for this combination of meter reading, and price slabs.");
+       }
 
-        Optional<MeterReading> meterReadingOptional = meterReadingRepository.findById(meterReadingId);
-               if(meterReadingOptional.isEmpty()){
-                   throw new CustomerNotFoundException("MeterReading not found with id: " + meterReadingId);
-               }
-               MeterReading meterReading = meterReadingOptional.get();
+       // Retrieve Customer
+       Customer customer = customerRepository.findById(customerId)
+               .orElseThrow(() -> new CustomerNotFoundException("Customer not found with id: " + customerId));
 
-        Optional<PriceSlabs> priceSlabsOptional = priceSlabRepository.findById(priceSlabsId);
-                if(priceSlabsOptional.isEmpty()){
-                    throw new CustomerNotFoundException("PriceSlabs not found with id: " + priceSlabsId);
-                }
-                PriceSlabs priceSlabs = priceSlabsOptional.get();
+       // Retrieve MeterReading
+       MeterReading meterReading = meterReadingRepository.findById(meterReadingId)
+               .orElseThrow(() -> new CustomerNotFoundException("MeterReading not found with id: " + meterReadingId));
 
-        // Calculate units consumed
-        int unitsConsumed = meterReading.getCurrentReading() - meterReading.getPreviousReading();
-        // Calculate total bill
-        double totalAmount = unitsConsumed * priceSlabs.getRate() ;
+       // Retrieve PriceSlabs
+       PriceSlabs priceSlabs = priceSlabRepository.findById(priceSlabsId)
+               .orElseThrow(() -> new CustomerNotFoundException("PriceSlabs not found with id: " + priceSlabsId));
 
-        double baseGstRate = 0.18;
+       // Calculate units consumed
+       int unitsConsumed = meterReading.getCurrentReading() - meterReading.getPreviousReading();
 
-        double gstAmount = totalAmount * baseGstRate;
+       // Calculate total bill
+       double totalAmount = unitsConsumed * priceSlabs.getRate();
+       double baseGstRate = 0.18;
+       double gstAmount = totalAmount * baseGstRate;
+       totalAmount += gstAmount;
 
-        totalAmount += gstAmount;
+       // Create Bill object
+       Bill bill = new Bill();
+       bill.setCustomer(customer);
+       bill.setMeterReading(meterReading);
+       bill.setPriceSlabs(priceSlabs);
+       bill.setUnitsConsumed(unitsConsumed);
+       bill.setTotalAmount(totalAmount);
+       bill.setGstAmount(gstAmount);
 
-        bill.setCustomer(customer);
-        bill.setMeterReading(meterReading);
-        bill.setPriceSlabs(priceSlabs);
-        bill.setUnitsConsumed(unitsConsumed);
-        bill.setTotalAmount(totalAmount);
-        bill.setGstAmount(gstAmount);
-
-        // Save the Bill entity
-        return billRepository.save(bill);
-    }
+       // Save the Bill entity
+       return billRepository.save(bill);
+   }
 }

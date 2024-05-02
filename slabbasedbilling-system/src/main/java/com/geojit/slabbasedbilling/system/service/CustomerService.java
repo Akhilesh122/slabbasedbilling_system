@@ -18,6 +18,7 @@ public class CustomerService {
         if (Objects.nonNull(customerRepository.findByCunsumerId(customer.getCunsumerId()))) {
             throw new CustomException("CunsumerId already present");
         }
+        customer.generateConsumerId();
         return customerRepository.save(customer);
     }
 
