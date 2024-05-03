@@ -22,8 +22,14 @@ public class Customer {
     private Long cunsumerId;
     public void generateConsumerId() {
         Random random = new Random();
-        // Generate a random number between 1000000000000 and 9999999999999
-        this.cunsumerId = Math.abs(1000000000000L + random.nextLong() % 9000000000000L);
+        // Generate a random number between 0 and 999999
+        long randomSuffix = random.nextLong() % 1000000;
+        if (randomSuffix < 0) {
+            // Ensure randomSuffix is positive
+            randomSuffix += 1000000;
+        }
+        // Combine the fixed prefix with the random suffix
+        this.cunsumerId = 1165410000000L + randomSuffix;
     }
     @Column(name = "name")
     @NotBlank(message = "Customer name is mandatory")

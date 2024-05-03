@@ -9,6 +9,7 @@ import com.geojit.slabbasedbilling.system.repository.MeterReadingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Month;
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class MeterReadingService {
         MeterReading meterReading = new MeterReading();
         meterReading.setCurrentReading(meterReadingResponseDto.getCurrentReading());
         meterReading.setPreviousReading(1000);
-        meterReading.setMonth(meterReadingResponseDto.getMonth());
+        meterReading.setMonth(Month.valueOf(meterReadingResponseDto.getMonth()));
         meterReading.setCustomer(customer);
         return  meterReadingRepository.save(meterReading);
     }
