@@ -4,6 +4,7 @@ import com.geojit.slabbasedbilling.system.dto.MeterReadingResponseDto;
 import com.geojit.slabbasedbilling.system.model.MeterReading;
 import com.geojit.slabbasedbilling.system.repository.CustomerRepository;
 import com.geojit.slabbasedbilling.system.service.MeterReadingService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class MeterReadingController {
     @Autowired
     private CustomerRepository customerRepository;
    @PostMapping("/saveMeterReading")
-   public ResponseEntity<MeterReading> saveMeterReadings(@RequestBody MeterReadingResponseDto meterReadingResponseDto) {
+   public ResponseEntity<MeterReading> saveMeterReadings(@Valid @RequestBody MeterReadingResponseDto meterReadingResponseDto) {
        MeterReading meterReading = meterReadingService.saveMeterReadingDetails(meterReadingResponseDto);
        return new ResponseEntity<>(meterReading, HttpStatus.CREATED);
    }

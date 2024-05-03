@@ -33,7 +33,7 @@ public class BillService {
        Long meterReadingId = billDto.getMeterReadingId();
        Long priceSlabsId = billDto.getPriceSlabsId();
 
-       // Check if a bill already exists for the given combination of meterReadingId and priceSlabsId
+       // Check if a bill already exists for the giv en combination of meterReadingId and priceSlabsId
        boolean billExists = billRepository.existsByMeterReading_IdAndPriceSlabs_Id(meterReadingId, priceSlabsId);
 
        if (billExists) {

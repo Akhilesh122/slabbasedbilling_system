@@ -2,6 +2,7 @@ package com.geojit.slabbasedbilling.system.controller;
 
 import com.geojit.slabbasedbilling.system.model.PriceSlabs;
 import com.geojit.slabbasedbilling.system.service.PriceSlabsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public class PriceSlabsController {
     @Autowired
     private PriceSlabsService priceSlabsService;
     @PostMapping("/savePriceSlabs")
-    public ResponseEntity<PriceSlabs> savePriceSlabs(@RequestBody PriceSlabs priceSlabs) throws ParseException {
+    public ResponseEntity<PriceSlabs> savePriceSlabs(@Valid @RequestBody PriceSlabs priceSlabs) throws ParseException {
         PriceSlabs priceSlabs1 = priceSlabsService.savePriceSlabsDetails(priceSlabs);
         return ResponseEntity.ok(priceSlabs1);
     }
