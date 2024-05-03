@@ -17,12 +17,6 @@ public class MeterReadingController {
     private MeterReadingService meterReadingService;
     @Autowired
     private CustomerRepository customerRepository;
-
-   /* @PostMapping("/saveMeterReading")
-    public ResponseEntity<MeterReading> saveMeterReading(@RequestParam Long customerId, @RequestBody MeterReading meterReading) {
-        MeterReading savedMeterReading = meterReadingService.saveMeterReadingDetails(customerId, meterReading);
-        return ResponseEntity.ok(savedMeterReading);
-    }*/
    @PostMapping("/saveMeterReading")
    public ResponseEntity<MeterReading> saveMeterReadings(@RequestBody MeterReadingResponseDto meterReadingResponseDto) {
        MeterReading meterReading = meterReadingService.saveMeterReadingDetails(meterReadingResponseDto);

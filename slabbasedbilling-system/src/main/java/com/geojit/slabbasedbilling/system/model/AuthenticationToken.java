@@ -20,13 +20,13 @@ public class AuthenticationToken {
     private String token;
     private Date createdDate;
 
-    public AuthenticationToken(User user) {
+    public AuthenticationToken(Employee user) {
         this.user = user;
         this.createdDate = new Date();
         this.token = UUID.randomUUID().toString();
     }
 
-    @OneToOne(targetEntity = User.class,fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = Employee.class,fetch = FetchType.EAGER)
     @JoinColumn(nullable = false,name = "user_id")
-    private User user;
+    private Employee user;
 }

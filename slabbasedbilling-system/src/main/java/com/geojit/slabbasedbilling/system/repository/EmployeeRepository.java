@@ -1,10 +1,10 @@
 package com.geojit.slabbasedbilling.system.repository;
 
-import com.geojit.slabbasedbilling.system.model.User;
+import com.geojit.slabbasedbilling.system.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Integer> {
-    User findByEmail(String userName);
+public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
+    Employee findByEmail(String userName);
 }

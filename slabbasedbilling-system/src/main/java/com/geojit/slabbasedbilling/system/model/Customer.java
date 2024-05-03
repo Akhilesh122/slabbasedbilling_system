@@ -25,10 +25,10 @@ public class Customer {
         // Generate a random number between 1000000000000 and 9999999999999
         this.cunsumerId = Math.abs(1000000000000L + random.nextLong() % 9000000000000L);
     }
-    @Column(name = "name",unique = true)
+    @Column(name = "name")
     @NotBlank(message = "Customer name is mandatory")
     private String name;
-    @Column(name = "address",unique = true)
+    @Column(name = "address")
     @NotBlank(message = "Customer Address is mandatory")
     private String address;
 }

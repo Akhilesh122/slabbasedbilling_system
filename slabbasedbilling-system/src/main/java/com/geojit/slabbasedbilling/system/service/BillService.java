@@ -14,6 +14,8 @@ import com.geojit.slabbasedbilling.system.repository.PriceSlabRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BillService {
 
@@ -27,7 +29,6 @@ public class BillService {
     private MeterReadingRepository meterReadingRepository;
    public Bill generateBill(BillDto billDto) {
 
-       // Extract data from BillDto
        Long customerId = billDto.getCustomerId();
        Long meterReadingId = billDto.getMeterReadingId();
        Long priceSlabsId = billDto.getPriceSlabsId();
@@ -71,5 +72,10 @@ public class BillService {
 
        // Save the Bill entity
        return billRepository.save(bill);
+   }
+
+   public List<Bill> getAllListOfBill(){
+
+       return billRepository.findAll();
    }
 }

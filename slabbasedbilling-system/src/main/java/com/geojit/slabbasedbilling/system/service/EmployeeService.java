@@ -7,8 +7,8 @@ import com.geojit.slabbasedbilling.system.dto.SignUpDto;
 import com.geojit.slabbasedbilling.system.exception.AuthenticationFailsExceptions;
 import com.geojit.slabbasedbilling.system.exception.CustomException;
 import com.geojit.slabbasedbilling.system.model.AuthenticationToken;
-import com.geojit.slabbasedbilling.system.model.User;
-import com.geojit.slabbasedbilling.system.repository.UserRepository;
+import com.geojit.slabbasedbilling.system.model.Employee;
+import com.geojit.slabbasedbilling.system.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import jakarta.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +19,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 @Service
-public class UserService {
+public class EmployeeService {
     @Autowired
-    private UserRepository userRepository;
+    private EmployeeRepository userRepository;
     @Autowired
     private AuthenticationService authenticationService;
 
     @Transactional
     public ResponseDto signUp(SignUpDto signUpDto) {
         if (Objects.nonNull(userRepository.findByEmail(signUpDto.getEmail()))) {
-            throw new CustomException("user already present");
+            throw new CustomException("Employee already present");
         }
         String encryptedPassword = signUpDto.getPassword();
         try {
@@ -37,7 +37,7 @@ public class UserService {
             e.printStackTrace();
             //throw new CustomException(e.getMessage());
         }
-        User user = new User(signUpDto.getFirstName(),
+        Employee user = new Employee(signUpDto.getFirstName(),
                 signUpDto.getLastName(),
                 signUpDto.getEmail(),
                 encryptedPassword);
@@ -48,7 +48,7 @@ public class UserService {
         authenticationService.saveConfirmationToken(authenticationToken);
 
 
-        ResponseDto responseDto = new ResponseDto("success", "User Created Sucessfully");
+        ResponseDto responseDto = new ResponseDto("success", "Employee Created Sucessfully");
         return responseDto;
     }
 
@@ -62,7 +62,7 @@ public class UserService {
 
     public SignInResponseDto signIn(SignInDto signInDto) {
 
-        User user = userRepository.findByEmail(signInDto.getEmail());
+        Employee user = userRepository.findByEmail(signInDto.getEmail());
         try {
             String userPassword = user.getPassword();
             if (userPassword == null || !userPassword.equals(hashPassword(signInDto.getPassword()))) {
