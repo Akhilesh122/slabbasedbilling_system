@@ -14,7 +14,6 @@ import com.geojit.slabbasedbilling.system.repository.PriceSlabRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,13 +29,11 @@ public class BillService {
     private MeterReadingRepository meterReadingRepository;
    public Bill generateBill(BillDto billDto) {
 
-       Date currentDate = new Date();
-
        Long customerId = billDto.getCustomerId();
        Long meterReadingId = billDto.getMeterReadingId();
        Long priceSlabsId = billDto.getPriceSlabsId();
 
-       // Check if a bill already exists for the giv en combination of meterReadingId and priceSlabsId
+       // Check if a bill already exists for the given combination of meterReadingId and priceSlabsId
        boolean billExists = billRepository.existsByMeterReading_IdAndPriceSlabs_Id(meterReadingId, priceSlabsId);
 
        if (billExists) {
@@ -61,7 +58,7 @@ public class BillService {
      int unitsConsumed = calculateUnitsConsumed(customerId);
 
        //Calculate total bill
-      double totalAmount = unitsConsumed * priceSlabs.getRate();
+       double totalAmount = unitsConsumed * priceSlabs.getRate();
        double baseGstRate = 0.18;
        double gstAmount = totalAmount * baseGstRate;
        totalAmount += gstAmount;
@@ -97,10 +94,11 @@ public class BillService {
             MeterReading previousReading = readings.get(readings.size() - 2); // Previous reading
 
             int unitsConsumed = currentReading.getReading() - previousReading.getReading();
+
             return unitsConsumed;
         } else {
-            //not enough raeding for these customer id
-            throw new CustomerNotFoundException("Not enough readings available to calculate units consumed for customer ID: " + customerId);
+            //not enough reading for these customer id
+            throw new CustomerNotFoundException("Not readings available to calculate units consumed for customer ID: " + customerId);
         }
     }
 }

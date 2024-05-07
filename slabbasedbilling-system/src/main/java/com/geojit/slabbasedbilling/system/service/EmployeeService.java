@@ -63,6 +63,9 @@ public class EmployeeService {
     public SignInResponseDto signIn(SignInDto signInDto) {
 
         Employee user = userRepository.findByEmail(signInDto.getEmail());
+        if (user == null || user.equals(signInDto.getEmail())) {
+            throw new AuthenticationFailsExceptions("Not existing email address");
+        }
         try {
             String userPassword = user.getPassword();
             if (userPassword == null || !userPassword.equals(hashPassword(signInDto.getPassword()))) {
@@ -75,7 +78,7 @@ public class EmployeeService {
         AuthenticationToken token = authenticationService.getToken(user);
 
         if (Objects.isNull(token)) {
-            throw new CustomException("Token is not present ");
+            throw new CustomException("Token is not present");
         }
         return new SignInResponseDto("Success", token.getToken());
     }
