@@ -18,6 +18,12 @@ public class CustomerService {
         if (Objects.nonNull(customerRepository.findByCunsumerId(customer.getCunsumerId()))) {
             throw new CustomException("CunsumerId already present");
         }
+        if (Objects.nonNull(customerRepository.findByName(customer.getName()))) {
+            throw new CustomException("Customer Name already present");
+        }
+        if (Objects.nonNull(customerRepository.findByAddress(customer.getAddress()))) {
+            throw new CustomException("Customer Address already present");
+        }
         customer.generateConsumerId();
         return customerRepository.save(customer);
     }
@@ -30,10 +36,13 @@ public class CustomerService {
       return customerRepository.getById(id);
     }
     public Customer updateCustomerDetails(Customer customer,Long id){
-        customer.setId(id);
+        customer.setCunsumerId(id);
         return customerRepository.save(customer);
     }
     public void deleteCustomerById(Long id) {
         customerRepository.deleteById(id);
+    }
+    public Customer getCustomerDetailsByConsumerId(Long cunsumerId) {
+        return customerRepository.findByCunsumerId(cunsumerId);
     }
 }

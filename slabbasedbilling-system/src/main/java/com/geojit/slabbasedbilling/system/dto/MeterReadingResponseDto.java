@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class MeterReadingResponseDto {
     private Long id;
-    private int currentReading;
-    private int previousReading;
-    private String month;
+    private int reading;
+    private Date date;
     private Long customerId;
 }

@@ -14,6 +14,7 @@ import com.geojit.slabbasedbilling.system.repository.PriceSlabRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,6 +29,8 @@ public class BillService {
     @Autowired
     private MeterReadingRepository meterReadingRepository;
    public Bill generateBill(BillDto billDto) {
+
+       Date currentDate = new Date();
 
        Long customerId = billDto.getCustomerId();
        Long meterReadingId = billDto.getMeterReadingId();
@@ -48,15 +51,17 @@ public class BillService {
        MeterReading meterReading = meterReadingRepository.findById(meterReadingId)
                .orElseThrow(() -> new CustomerNotFoundException("MeterReading not found with id: " + meterReadingId));
 
+
        // Retrieve PriceSlabs
        PriceSlabs priceSlabs = priceSlabRepository.findById(priceSlabsId)
+
                .orElseThrow(() -> new CustomerNotFoundException("PriceSlabs not found with id: " + priceSlabsId));
 
        // Calculate units consumed
-       int unitsConsumed = meterReading.getCurrentReading() - meterReading.getPreviousReading();
+     int unitsConsumed = calculateUnitsConsumed(customerId);
 
-       // Calculate total bill
-       double totalAmount = unitsConsumed * priceSlabs.getRate();
+       //Calculate total bill
+      double totalAmount = unitsConsumed * priceSlabs.getRate();
        double baseGstRate = 0.18;
        double gstAmount = totalAmount * baseGstRate;
        totalAmount += gstAmount;
@@ -70,6 +75,10 @@ public class BillService {
        bill.setTotalAmount(totalAmount);
        bill.setGstAmount(gstAmount);
 
+       // Check if the customer ID in the meter reading matches the customer ID associated with the provided customer
+       if (!meterReading.getCustomer().getId().equals(customer.getId())) {
+           throw new CustomerNotFoundException("Customer ID in the meter reading does not match the customer ID associated with the customer.");
+       }
        // Save the Bill entity
        return billRepository.save(bill);
    }
@@ -78,4 +87,20 @@ public class BillService {
 
        return billRepository.findAll();
    }
+    public int calculateUnitsConsumed(long customerId) {
+        List<MeterReading> readings = meterReadingRepository.findByCustomerIdOrderByDateAscReadingDesc(customerId);
+
+        // Check if there are at least two readings
+        if (readings.size() >= 2) {
+            // Assuming the list is sorted by date in ascending order
+            MeterReading currentReading = readings.get(readings.size() - 1); // Latest reading
+            MeterReading previousReading = readings.get(readings.size() - 2); // Previous reading
+
+            int unitsConsumed = currentReading.getReading() - previousReading.getReading();
+            return unitsConsumed;
+        } else {
+            //not enough raeding for these customer id
+            throw new CustomerNotFoundException("Not enough readings available to calculate units consumed for customer ID: " + customerId);
+        }
+    }
 }

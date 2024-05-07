@@ -9,7 +9,6 @@ import com.geojit.slabbasedbilling.system.repository.MeterReadingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Month;
 import java.util.List;
 
 @Service
@@ -23,11 +22,11 @@ public class MeterReadingService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found with id: " + customerId));
         MeterReading meterReading = new MeterReading();
-        meterReading.setCurrentReading(meterReadingResponseDto.getCurrentReading());
-        meterReading.setPreviousReading(1000);
-        meterReading.setMonth(Month.valueOf(meterReadingResponseDto.getMonth()));
+        meterReading.setReading(meterReadingResponseDto.getReading());
+        meterReading.setDate(meterReadingResponseDto.getDate());
         meterReading.setCustomer(customer);
-        return  meterReadingRepository.save(meterReading);
+        meterReading.currentDate();
+        return meterReadingRepository.save(meterReading);
     }
     public List<MeterReading> getAllMeterReading(){
         return meterReadingRepository.findAll();

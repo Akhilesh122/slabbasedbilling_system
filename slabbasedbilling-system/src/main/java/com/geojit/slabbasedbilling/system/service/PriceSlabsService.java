@@ -1,13 +1,11 @@
 package com.geojit.slabbasedbilling.system.service;
 
-import com.geojit.slabbasedbilling.system.exception.CustomException;
 import com.geojit.slabbasedbilling.system.model.PriceSlabs;
 import com.geojit.slabbasedbilling.system.repository.PriceSlabRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class PriceSlabsService {
@@ -15,12 +13,23 @@ public class PriceSlabsService {
     private PriceSlabRepository priceSlabRepository;
 
    public PriceSlabs savePriceSlabsDetails(PriceSlabs priceSlabs){
-       if (Objects.nonNull(priceSlabRepository.findByStartDate(priceSlabs.getStartDate()))) {
-           throw new CustomException("Start Date already present");
-       }
-       if (Objects.nonNull(priceSlabRepository.findByEndDate(priceSlabs.getEndDate()))) {
-           throw new CustomException("End Date already present");
-       }
+
+       priceSlabs.generateUnits(0); // Generates startUnit = 0 and endUnit = 50
+
+       priceSlabs.generateUnits(1); // Generates startUnit = 50 and endUnit = 100
+
+       priceSlabs.generateUnits(2);
+
+       priceSlabs.generateUnits(3);
+
+       priceSlabs.generateUnits(4);
+
+       priceSlabs.generateUnits(5);
+
+       priceSlabs.generateUnits(6);
+
+       priceSlabs.generateUnits(7);
+
        return priceSlabRepository.save(priceSlabs);
    }
 

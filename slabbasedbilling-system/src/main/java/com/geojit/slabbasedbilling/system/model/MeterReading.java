@@ -8,7 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Month;
+import java.util.Calendar;
+import java.util.Date;
 
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -20,12 +21,14 @@ public class MeterReading {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Min(value = 0, message = "Current reading cannot be negative")
-    private int currentReading;
-    //@Min(value = 0, message = "Previous reading cannot be negative")
-    private int previousReading;
-    @NotNull(message = "Month of reading is mandatory")
-    private Month month;
+    private int reading;
+    @NotNull(message = "date of reading is mandatory")
+    private Date date;
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    public void currentDate(){
+        this.date = Calendar.getInstance().getTime();
+    }
 }

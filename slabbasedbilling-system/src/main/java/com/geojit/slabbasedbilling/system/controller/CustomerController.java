@@ -38,4 +38,8 @@ public class CustomerController {
 
        customerService.deleteCustomerById(id);
     }
+    @GetMapping("/customer-details")
+    public Customer getCustomerDetailsByConsumerId(@RequestParam Long cunsumerId) {
+        return customerService.getCustomerDetailsByConsumerId(cunsumerId);
+    }
 }
