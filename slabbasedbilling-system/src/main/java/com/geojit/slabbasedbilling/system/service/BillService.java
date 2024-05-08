@@ -90,7 +90,7 @@ public class BillService {
         // Check if there are at least two readings
         if (readings.size() >= 2) {
             // Assuming the list is sorted by date in ascending order
-            MeterReading currentReading = readings.get(readings.size() - 1); // Latest reading
+            MeterReading currentReading = readings.get(readings.size() - 1); //  Latest reading
             MeterReading previousReading = readings.get(readings.size() - 2); // Previous reading
 
             int unitsConsumed = currentReading.getReading() - previousReading.getReading();
