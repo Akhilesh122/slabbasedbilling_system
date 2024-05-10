@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill,Long> {
-
-    boolean existsByMeterReading_IdAndPriceSlabs_Id(Long meterReadingId, Long priceSlabsId);
 }

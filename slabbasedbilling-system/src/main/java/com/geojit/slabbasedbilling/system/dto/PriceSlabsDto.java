@@ -7,10 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BillDto {
+public class PriceSlabsDto {
     private long id;
+
+    private int startUnit;
+
+    private int endUnit;
+
+    private double rate;
+
     private Long customerId;
-    private int unitsConsumed;
-    private double totalAmount;
-    private double gstAmount;
+
 }

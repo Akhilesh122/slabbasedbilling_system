@@ -1,5 +1,6 @@
 package com.geojit.slabbasedbilling.system.controller;
 
+import com.geojit.slabbasedbilling.system.dto.PriceSlabsDto;
 import com.geojit.slabbasedbilling.system.model.PriceSlabs;
 import com.geojit.slabbasedbilling.system.service.PriceSlabsService;
 import jakarta.validation.Valid;
@@ -15,8 +16,8 @@ public class PriceSlabsController {
     @Autowired
     private PriceSlabsService priceSlabsService;
     @PostMapping("/savePriceSlabs")
-    public ResponseEntity<PriceSlabs> savePriceSlabs(@Valid @RequestBody PriceSlabs priceSlabs) throws ParseException {
-        PriceSlabs priceSlabs1 = priceSlabsService.savePriceSlabsDetails(priceSlabs);
+    public ResponseEntity<PriceSlabs> savePriceSlabs(@Valid @RequestBody PriceSlabsDto priceSlabsDto) throws ParseException {
+        PriceSlabs priceSlabs1 = priceSlabsService.savePriceSlabsDetails(priceSlabsDto);
         return ResponseEntity.ok(priceSlabs1);
     }
     @GetMapping("/getAllPriceSlabs")

@@ -37,4 +37,11 @@ public class Customer {
     @Column(name = "address")
     @NotBlank(message = "Customer Address is mandatory")
     private String address;
+   /* @OneToMany
+    private List<PriceSlabs> priceSlabs;
+    @OneToMany
+    private List<MeterReading> meterReadings;
+    @OneToMany
+    private List<Bill> bill;*/
+
 }
